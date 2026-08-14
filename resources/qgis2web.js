@@ -5,14 +5,14 @@ var map = new ol.Map({
     layers: layersList,
     view: new ol.View({
         constrainResolution: true,
-        maxZoom: 16,
-        minZoom: 6,
+        maxZoom: 15,
+        minZoom: 5,
         
     })
 });
 
 //initial view - epsg:3857 coordinates if not "Match project CRS"
-map.getView().fit([-9103151.359620, -470844.229663, -7438924.972261, 1505468.571796], map.getSize());
+map.getView().fit([-9103151.359620, -473542.285489, -7438924.972261, 1505468.571796], map.getSize());
 
 //change cursor
 function pointerOnFeature(evt) {
@@ -501,7 +501,7 @@ var Title = new ol.control.Control({
     element: (() => {
         var titleElement = document.createElement('div');
         titleElement.className = 'top-left-title ol-control';
-        titleElement.innerHTML = '<h2 class="project-title">Agroclima Cebar: Riesgo Agroclimático</h2>';
+        titleElement.innerHTML = '<h2 class="project-title">Agroclima Cebar: Riesgo Agroclimático.<br>Actualización: 11Ago2026</h2>';
         return titleElement;
     })(),
     target: 'top-left-container'
