@@ -9,385 +9,961 @@
   Autor del desarrollo:
   Y. Cortés - SFA Cebar
 
-  Asistencia técnica en diseño de interfaz,
+  Asistencia técnica inicial en diseño de interfaz,
   arquitectura de personalización y organización CSS:
   ChatGPT (OpenAI)
+
+  Asistencia técnica avanzada en optimización responsiva,
+  gestión de interacción y eventos (pointer-events),
+  jerarquía visual de capas (z-index) y maquetación UI:
+  Gemini (Google)
 
   Nota:
   Los estilos contenidos en este archivo corresponden a la
   capa de personalización propia del proyecto y deben
   mantenerse independientes de los archivos generados
   automáticamente por Qgis2web.
-
 =========================================================*/
 
 /*=========================================================
-  IDENTIDAD VISUAL
+  1. IDENTIDAD VISUAL & VARIABLES DE ENTORNO
 =========================================================*/
+:root {
+    /* Identidad institucional SFA Cebar */
+    --color-primario: #064d6b;
+    --color-primario-rgb: 6, 77, 107;
+    --color-primario-hover: #0b658d;
+    --color-primario-hover-rgb: 11, 101, 141;
+    --color-acento: #ec4529;
+    --color-acento-rgb: 236, 69, 41;
+    --color-fondo: #ffffff;
+    --color-fondo-rgb: 255, 255, 255;
 
-:root{
+    /* Superficies */
+    --surface-primary: rgba(var(--color-fondo-rgb), 0.85);
+    --surface-secondary: rgba(var(--color-primario-rgb), 0.08);
+    --surface-border: rgba(var(--color-primario-rgb), 0.10);
 
-    /*=====================================================
-      Identidad institucional SFA Cebar
-    =====================================================*/
-    /* Se definen los colores institucionales
-    en formato hexadecimal y RGB para
-    facilitar el uso de transparencias. */
-
-    --color-primario:#064d6b;
-    --color-primario-rgb:6, 77, 107;
-
-    --color-primario-hover:#0b658d;
-    --color-primario-hover-rgb:11, 101, 141;
-
-    --color-acento:#ec4529;
-    --color-acento-rgb:236, 69, 41;
-
-    --color-fondo:#ffffff;
-    --color-fondo-rgb:255,255,255;
-
+    /* Tipografía */
+    --texto-destacado: var(--color-primario);
+    --peso-destacado: 600;
 
     /* Animaciones */
+    --transicion-normal: .25s;
+    --transicion-lenta: .50s;
 
-    --transicion-normal:.25s;
+    /* Sistema de controles Agroclima */
+    --toolbar-margin-top: 8px;
+    --toolbar-margin-left: 8px;
 
-    --transicion-lenta:.50s;
+    --tool-container-background: rgba(255, 255, 255, .4);
+    --tool-background: #f8f8f8;
+    --tool-padding: 2px;
+    --tool-radius: 4px;
+    --tool-shadow: 0 3px 14px rgba(0, 0, 0, .4);
+    --tool-margin-top: 8px;
+    --tool-gap: 4px;
 
-}
+    /* Botón */
+    --control-size: 20.375px;
+    --control-font-size: 14px;
+    --control-radius: 2px;
+    --control-margin: 1px;
+    --control-padding: 0px;
+    --control-bg: #f8f8f8;
+    --control-color: #444444;
+    --control-hover-bg: rgba(248, 248, 248, .7);
+    --control-gap: 4px;
 
-/*=========================================================
-  ANIMACIONES
-=========================================================*/
+    /* Botones de paneles */
+    --panel-button-padding-y: 8px;
+    --panel-button-padding-x: 28px;
+    --panel-button-font-size: 16px;
+    --panel-button-radius: 8px;
+    --panel-button-font-weight: bold;
+    --panel-button-shadow: 0 6px 16px rgba(6, 77, 107, .30);
+    --panel-button-shadow-active: 0 1px 4px rgba(6, 77, 107, .20);
 
-.agroclima-aparece{
+    /* Definición del marcador visual reutilizable  (Gemini)*/
+    --marcador-busqueda-color: var(--color-acento);
+    --marcador-busqueda-borde: var(--color-fondo);
+    --marcador-busqueda-tamano: 28px;
 
-    animation:agroclima-aparecer var(--transicion-normal) ease;
+    /* Definición visual para etiquetas de búsqueda por coordenadas (Gemini) */
+    --etiqueta-coordenada-bg: rgba(var(--color-fondo-rgb), 0.95);
+    --etiqueta-coordenada-texto: var(--color-primario);
+    --etiqueta-coordenada-borde: var(--color-acento);
 
-}
+    /*--------------------------------------
+      Notificaciones Agroclima
+    --------------------------------------*/
 
+    --notificacion-bg: var(--surface-primary);
 
-.agroclima-desaparece{
+    --notificacion-color: var(--color-primario);
 
-    animation:agroclima-desaparecer var(--transicion-normal) ease forwards;
+    --notificacion-borde: var(--color-primario);
 
-}
+    --notificacion-info: var(--color-primario);
 
+    --notificacion-exito: #2e7d32;
 
-@keyframes agroclima-aparecer{
+    --notificacion-advertencia: #b26a00;
 
-    from{
+    --notificacion-error: var(--color-acento);
 
-        opacity:0;
+    --notificacion-sombra:
+        0 4px 14px rgba(0, 0, 0, .25);
 
-        transform:translate(-50%,-45%) scale(.96);
+    --notificacion-radio: 8px;
 
-    }
+    --notificacion-padding-y: 10px;
 
+    --notificacion-padding-x: 16px;
 
-    to{
-
-        opacity:1;
-
-        transform:translate(-50%,-50%) scale(1);
-
-    }
-
-}
-
-
-@keyframes agroclima-desaparecer{
-
-    from{
-
-        opacity:1;
-
-    }
-
-    to{
-
-        opacity:0;
-
-    }
-
-}
-
-.agroclima-carga-desaparece{
-
-    opacity:0;
-
-    transition:opacity var(--transicion-lenta) ease;
-
-}
-
-/*=========================================================
-  LOGO
-=========================================================*/
-
-#logo-flotante{
-
-    position:absolute;
-
-    bottom:10px;
-
-    left:10px;
-
-    z-index:1000;
-
-    width:200px;
-
-    height:auto;
-
-}
-
-@media (max-width:768px){
-
-    #logo-flotante{
-
-        width:120px;
-
-        bottom:40px;
-
-    }
+    --notificacion-max-width: 360px;
 
 }
 
 /*=========================================================
-  PANTALLA DE CARGA
+  2. ANIMACIONES
 =========================================================*/
-
-#pantalla-carga{
-
-    position:fixed;
-
-    inset:0;
-
-    background:var(--color-fondo);
-
-    z-index:99999;
-
+.agroclima-aparece {
+    animation: agroclima-aparecer var(--transicion-normal) ease;
 }
 
-.agroclima-carga{
-
-    position:absolute;
-
-    top:50%;
-
-    left:50%;
-
-    transform:translate(-50%,-50%);
-
-    z-index:20000;
-
+.agroclima-desaparece {
+    animation: agroclima-desaparecer var(--transicion-normal) ease forwards;
 }
 
-.agroclima-logo-carga{
-
-    width:220px;
-
-    height:auto;
-
-    display:block;
-
+@keyframes agroclima-aparecer {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -45%) scale(.96);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
 }
 
-.agroclima-titulo-carga{
-
-    margin-top:20px;
-
-    margin-bottom:0;
-
-    color:var(--color-primario);
-
-    font-size:2rem;
-
-    font-weight:700;
-
-    text-align:center;
-
+@keyframes agroclima-desaparecer {
+    from { opacity: 1; }
+    to { opacity: 0; }
 }
 
-.agroclima-texto-carga{
+.agroclima-carga-desaparece {
+    opacity: 0;
+    transition: opacity var(--transicion-lenta) ease;
+}
 
-    margin-top:18px;
-
-    color:var(--color-primario);
-
-    font-size:1rem;
-
-    text-align:center;
-
-    animation:agroclima-respirar 1.6s ease-in-out infinite;
-
+@keyframes agroclima-respirar {
+    0% { opacity: .45; }
+    50% { opacity: 1; }
+    100% { opacity: .45; }
 }
 
 /*=========================================================
-  ANIMACIÓN TEXTO DE CARGA
+  3. COMPONENTES PERMANENTES (LOGO Y PANTALLA DE CARGA)
+=========================================================*/
+#logo-flotante {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    z-index: 1000;
+    width: 200px;
+    height: auto;
+}
+
+#pantalla-carga {
+    position: fixed;
+    inset: 0;
+    background: var(--color-fondo);
+    z-index: 99999;
+}
+
+.agroclima-carga {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 20000;
+}
+
+.agroclima-logo-carga {
+    width: 220px;
+    height: auto;
+    display: block;
+}
+
+.agroclima-titulo-carga {
+    margin-top: 20px;
+    margin-bottom: 0;
+    color: var(--color-primario);
+    font-size: 2rem;
+    font-weight: 700;
+    text-align: center;
+}
+
+.agroclima-texto-carga {
+    margin-top: 18px;
+    color: var(--color-primario);
+    font-size: 1rem;
+    text-align: center;
+    animation: agroclima-respirar 1.6s ease-in-out infinite;
+}
+
+/*=========================================================
+  4. PANELES MODALES Y BOTONES GENERALES
+=========================================================*/
+.agroclima-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 420px;
+    max-width: 90vw;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    background: rgba(var(--color-fondo-rgb), 0.85);
+    border: 1px solid #d9d9d9;
+    border-top: 6px solid var(--color-primario);
+    border-radius: 16px;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.28);
+    padding: 24px;
+    z-index: 10000;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.agroclima-logo {
+    width: 140px;
+    height: auto;
+    margin-bottom: 2px;
+}
+
+.agroclima-titulo {
+    margin: -6px;
+    color: var(--color-primario);
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.agroclima-subtitulo {
+    margin-top: 0;
+    margin-bottom: 12px;
+    color: var(--color-primario);
+    font-size: 16px;
+    font-weight: normal;
+}
+
+.agroclima-descripcion {
+    margin-bottom: 18px;
+    line-height: 1.6;
+    color: var(--texto-destacado);
+    font-weight: var(--peso-destacado);
+}
+
+.agroclima-lista {
+    text-align: left;
+    line-height: 1.6;
+    margin-bottom: 25px;
+}
+
+.agroclima-modal-body {
+    flex: 1;
+    overflow-y: auto;
+    background: var(--surface-secondary);
+    border-radius: 8px;
+    padding: 16px;
+    border: 1px solid var(--surface-border);
+}
+
+.agroclima-modal-footer {
+    margin-top: 6px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.agroclima-boton {
+    display: inline-block;
+    padding: var(--panel-button-padding-y) var(--panel-button-padding-x);
+    background: var(--color-primario);
+    color: var(--color-fondo);
+    border: none;
+    border-bottom: 3px solid transparent;
+    border-radius: var(--panel-button-radius);
+    font-size: var(--panel-button-font-size);
+    font-weight: var(--panel-button-font-weight);
+    cursor: pointer;
+    transition: all var(--transicion-normal) ease;
+}
+
+.agroclima-boton:hover {
+    background: var(--color-primario-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--panel-button-shadow);
+    border-bottom-color: var(--color-acento);
+}
+
+.agroclima-boton:active {
+    background: var(--color-primario);
+    transform: translateY(2px) scale(.96);
+    box-shadow: var(--panel-button-shadow-active);
+    border-bottom-color: var(--color-acento);
+}
+
+/*=========================================================
+  NOTIFICACIONES AGROCLIMA
 =========================================================*/
 
-@keyframes agroclima-respirar{
+.agroclima-notificacion {
 
-    0%{
+    position: fixed;
 
-        opacity:.45;
+    top: 20px;
+
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    display: none;
+
+    width: max-content;
+
+    max-width: var(--notificacion-max-width);
+
+    padding:
+        var(--notificacion-padding-y)
+        var(--notificacion-padding-x);
+
+    background: var(--notificacion-bg);
+
+    color: var(--notificacion-color);
+
+    border: 1px solid var(--notificacion-borde);
+
+    border-radius: var(--notificacion-radio);
+
+    box-shadow: var(--notificacion-sombra);
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    line-height: 1.4;
+
+    text-align: center;
+
+    z-index: 11000;
+
+    pointer-events: none;
+
+}
+
+
+/*--------------------------------------
+  Estados
+--------------------------------------*/
+
+.agroclima-notificacion-info {
+
+    border-left: 5px solid var(--notificacion-info);
+
+}
+
+
+.agroclima-notificacion-exito {
+
+    border-left: 5px solid var(--notificacion-exito);
+
+}
+
+
+.agroclima-notificacion-advertencia {
+
+    border-left: 5px solid var(--notificacion-advertencia);
+
+}
+
+
+.agroclima-notificacion-error {
+
+    border-left: 5px solid var(--notificacion-error);
+
+}
+
+
+/*--------------------------------------
+  Animación
+--------------------------------------*/
+
+.agroclima-notificacion.activa {
+
+    display: block;
+
+    animation:
+        agroclima-notificacion-aparecer
+        var(--transicion-normal)
+        ease;
+
+}
+
+
+@keyframes agroclima-notificacion-aparecer {
+
+    from {
+
+        opacity: 0;
+
+        transform: translate(-50%, -10px);
 
     }
 
-    50%{
+    to {
 
-        opacity:1;
+        opacity: 1;
 
-    }
-
-    100%{
-
-        opacity:.45;
+        transform: translate(-50%, 0);
 
     }
 
 }
 
 /*=========================================================
-  VENTANA DE BIENVENIDA
+  5. AJUSTE DE CAPAS OPENLAYERS - Z-INDEX (Gemini)
 =========================================================*/
-
-
-/*=========================================================
-  PANELES REUTILIZABLES
-=========================================================*/
-
-.agroclima-modal{
-
-    position:fixed;
-
-    top:50%;
-
-    left:50%;
-
-    transform:translate(-50%,-50%);
-
-    width:420px;
-
-    max-width:90vw;
-
-    background:rgba(var(--color-fondo-rgb),0.85);
-
-    border:1px solid #d9d9d9;
-
-    border-top:6px solid var(--color-primario);
-
-    border-radius:16px;
-
-    box-shadow:0 12px 35px rgba(0,0,0,0.28);
-
-    padding:30px;
-
-    z-index:10000;
-
-    text-align:center;
-
-    font-family:Arial, Helvetica, sans-serif;
-
-}
-
-.agroclima-titulo{
-
-    margin:0;
-
-    color:var(--color-primario);
-
-    font-size:28px;
-
-    font-weight:bold;
-
-}
-
-.agroclima-subtitulo{
-
-    margin-top:8px;
-
-    margin-bottom:20px;
-
-    color:var(--color-primario);
-
-    font-size:18px;
-
-    font-weight:normal;
-
-}
-
-.agroclima-descripcion{
-
-    margin-bottom:18px;
-
-    line-height:1.5;
-
-}
-
-.agroclima-lista{
-
-    text-align:left;
-
-    line-height:1.6;
-
-    margin-bottom:25px;
-
+.ol-overlaycontainer-stopevent {
+    z-index: 1200 !important;
 }
 
 /*=========================================================
-  BOTONES
+  6. TOOLBAR AGROCLIMA Y PANEL FLOTANTE (Gemini)
+=========================================================*/
+#agroclima-toolbar {
+    position: relative;
+    margin-top: var(--toolbar-margin-top);
+    margin-left: var(--toolbar-margin-left);
+    clear: both;
+    display: block;
+}
+
+#agroclima-tools {
+    display: inline-flex;
+    gap: var(--control-gap);
+}
+
+.agroclima-tool {
+    position: relative !important; /* Ancla necesaria para posicionar lateralmente */
+    display: inline-block;
+    background: var(--tool-container-background);
+    padding: var(--tool-padding);
+    border-radius: var(--tool-radius);
+    box-shadow: var(--tool-shadow);
+    margin-right: var(--tool-gap);
+    margin-top: var(--tool-margin-top);
+}
+
+.agroclima-button {
+    display: block;
+    width: var(--control-size);
+    height: var(--control-size);
+    margin: var(--control-margin);
+    padding: var(--control-padding);
+    border: none;
+    border-radius: var(--control-radius);
+    background: var(--control-bg);
+    color: var(--control-color);
+    font-size: var(--control-font-size);
+    text-align: center;
+    cursor: pointer;
+}
+
+#boton-toolbar {
+    cursor: pointer;
+}
+
+/* Panel desplegable (Despliegue lateral estricto a la derecha + Scroll funcional) */
+.agroclima-toolbar-panel {
+    position: absolute !important;
+    top: 0 !important;
+    left: calc(100% + 8px) !important; /* Abre siempre a la derecha del botón */
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    min-width: 170px;
+    max-height: 180px !important; /* Límite en píxeles que fuerza la aparición del scrollbar */
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    box-sizing: border-box;
+    padding: 8px;
+    background: var(--surface-primary);
+    border: 1px solid var(--surface-border);
+    border-radius: 8px;
+    box-shadow: var(--tool-shadow);
+}
+
+/* Regla indispensable para obligar al scrollbar a actuar en Flexbox */
+.agroclima-toolbox-titulo,
+.agroclima-toolbar-panel hr,
+.agroclima-toolbox-boton {
+    flex-shrink: 0 !important; /* Evita que los botones se encogaz/deformen */
+}
+
+/* Personalización de la barra de desplazamiento */
+.agroclima-toolbar-panel::-webkit-scrollbar {
+    width: 5px;
+}
+
+.agroclima-toolbar-panel::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+}
+
+.agroclima-toolbar-panel::-webkit-scrollbar-thumb {
+    background: var(--color-primario);
+    border-radius: 4px;
+}
+
+.agroclima-toolbox-boton {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    padding: 6px 10px;
+    margin: 3px 0;
+    border: none;
+    border-radius: 4px;
+    background: transparent;
+    color: var(--color-primario);
+    font-size: 14px;
+    cursor: pointer;
+    text-align: left;
+    transition: all var(--transicion-normal) ease;
+}
+
+.agroclima-toolbox-boton:hover {
+    background: var(--surface-secondary);
+    color: var(--color-primario-hover);
+}
+
+.agroclima-toolbox-boton i {
+    width: 20px;
+    margin-right: 8px;
+    text-align: center;
+}
+
+/*=========================================================
+  7. PERSONALIZACIÓN CONTROLES NATIVOS Y CRÉDITOS (Gemini)
+=========================================================*/
+.layer-switcher > button {
+    background-image: none;
+    position: relative;
+}
+
+.layer-switcher > button::before {
+    content: "\f0ae";
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    font-size: 18px;
+    color: var(--control-color);
+}
+
+.layer-switcher.shown > button::before {
+    content: none;
+}
+
+.agroclima-icono-ayuda {
+    display: inline-block;
+    color: var(--control-color);
+    margin-right: 6px;
+    font-size: 16px;
+    width: 20px;
+    text-align: center;
+}
+
+.agroclima-icono-capas-cerrar {
+    display: inline-block;
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 16px;
+    vertical-align: middle;
+}
+
+.agroclima-separador-iconos {
+    margin: 0 6px;
+    color: var(--texto-destacado);
+}
+
+.agroclima-icono-mapa {
+    display: inline-block;
+    color: #ffffff;
+    -webkit-text-stroke: 1px #000000;
+    margin-right: 6px;
+    font-size: 16px;
+    width: 20px;
+    text-align: center;
+}
+
+/* Créditos e indicador de escala inferior */
+.bottom-attribution ul,
+.bottom-attribution li {
+    white-space: normal !important;
+}
+
+/*=========================================================
+  8. ADAPTACIONES RESPONSIVAS - MEDIA QUERIES (Gemini)
+=========================================================*/
+@media (max-width: 768px) {
+    #logo-flotante {
+        width: 120px;
+        bottom: 40px;
+    }
+}
+
+@media (max-width: 650px) {
+    .bottom-attribution {
+        max-width: 65vw !important;
+        font-size: 9px !important;
+        line-height: 1.3 !important;
+        background-color: rgba(255, 255, 255, 0.85) !important;
+    }
+
+    .bottom-attribution ul {
+        margin: 0 !important;
+        padding: 4px !important;
+    }
+
+    #bottom-left-container {
+        bottom: 30px !important;
+    }
+}
+
+@media (max-width: 600px), (max-height: 500px) {
+    :root {
+        --control-size: 30px;
+        --control-font-size: 20px;
+    }
+
+    /* Ajuste para mantener despliegue lateral compacto en móviles */
+    .agroclima-toolbar-panel {
+        left: calc(100% + 6px) !important;
+        top: 0 !important;
+        max-width: 70vw !important;
+        max-height: 160px !important; /* Límite compacto para pantallas pequeñas */
+        padding: 4px 6px !important;
+        gap: 1px !important;
+    }
+
+    .agroclima-toolbox-titulo {
+        font-size: 12px !important;
+        margin: 2px 0 0 0 !important;
+        padding: 0 !important;
+        line-height: 1.2 !important;
+    }
+
+    .agroclima-toolbar-panel hr {
+        margin: 3px 0 !important;
+        border-top: 1px solid var(--surface-border);
+    }
+
+    .agroclima-toolbox-boton {
+        padding: 4px 6px !important;
+        margin: 1px 0 !important;
+        font-size: 12px !important;
+        line-height: 1.2 !important;
+    }
+
+    .agroclima-toolbox-boton i {
+        margin-right: 5px !important;
+        width: 14px !important;
+    }
+}
+
+@media (min-width: 601px) and (max-width: 1024px) {
+    :root {
+        --control-size: 26px;
+        --control-font-size: 18px;
+    }
+}
+/*=========================================================
+  DESBLOQUEO DE INTERACCIÓN CON EL MAPA (Gemini)
+=========================================================*/
+/* 1. Permite que los clics en zonas vacías atraviesen el contenedor hacia el mapa */
+#top-left-container {
+    pointer-events: none !important;
+    width: fit-content !important;
+    max-width: max-content !important;
+}
+
+/* 2. Mantiene la interactividad activa exclusivamente en los botones y controles */
+#top-left-container > * {
+    pointer-events: auto !important;
+}
+
+/* 3. Acota el título para que no abarque espacio transparente a su derecha */
+.top-left-title {
+    width: fit-content !important;
+    display: inline-block !important;
+}
+
+.project-title {
+    margin: 0 !important;
+    display: inline-block !important;
+    white-space: nowrap !important;
+}
+
+/*=========================================================
+  DESBLOQUEO DE INTERACCIÓN GENERAL (Gemini)
+=========================================================*/
+/* 1. Toolbar Agroclima: Permite traspasar clics en áreas vacías */
+#agroclima-toolbar,
+#agroclima-tools {
+    pointer-events: none !important;
+    width: fit-content !important;
+}
+
+/* Reactiva la interacción únicamente en el botón y el panel abierto */
+#boton-toolbar,
+.agroclima-toolbar-panel {
+    pointer-events: auto !important;
+}
+
+/* 2. Logo flotante: Al ser una imagen puramente informativa, 
+   permite que los clics sobre ella consulten el mapa subyacente */
+#logo-flotante {
+    pointer-events: none !important;
+}
+
+/*=========================================================
+  BOTÓN PARA BORRAR MARCADOR DE BÚSQUEDA PHOTON (Gemini)
+=========================================================*/
+.photon-geocoder-autocomplete {
+    align-items: center;
+}
+
+#boton-limpiar-busqueda {
+    background: transparent;
+    border: none;
+    color: var(--color-acento);
+    font-size: 13px;
+    cursor: pointer;
+    padding: 0 6px;
+    margin-left: 2px;
+    pointer-events: auto !important;
+    transition: color var(--transicion-normal) ease;
+}
+
+#boton-limpiar-busqueda:hover {
+    color: var(--color-primario);
+}
+/*=========================================================
+  BOTÓN FLOTANTE SOBRE EL MARCADOR DE BÚSQUEDA (Gemini)
 =========================================================*/
 
-.agroclima-boton{
+/* Con mejoras del aporte Gemini cerrar Chatgpt */
+#contenedor-cerrar-marcador {
+    display: none;
+    pointer-events: none;
+    z-index: 3000;
+}
 
-    display:inline-block;
+#contenedor-cerrar-marcador.activo {
+    display: block;
+    pointer-events: auto !important;
+}
 
-    padding:12px 28px;
 
-    background:var(--color-primario);
+#boton-cerrar-marcador{
 
-    color:var(--color-fondo);
+    width:var(--control-size);
 
-    border:none;
+    height:var(--control-size);
 
-    border-bottom:3px solid transparent;
+    display:flex;
 
-    border-radius:8px;
+    align-items:center;
 
-    font-size:16px;
+    justify-content:center;
 
-    font-weight:bold;
+    padding:var(--control-padding);
+
+    background:var(--control-bg);
+
+    color:var(--color-acento);
+
+    border:2px solid var(--color-acento);
+
+    border-radius:50%;
+
+    font-size:var(--control-font-size);
 
     cursor:pointer;
+
+    box-shadow:var(--tool-shadow);
 
     transition:all var(--transicion-normal) ease;
 
 }
 
-.agroclima-boton:hover{
+#boton-cerrar-marcador:hover{
 
-    background:var(--color-primario-hover);
+    background:var(--color-acento);
 
-    transform:translateY(-2px);
+    color:var(--color-fondo);
 
-    box-shadow:0 6px 16px rgba(6,77,107,.30);
-
-    border-bottom-color:var(--color-acento);
+    transform:scale(1.15);
 
 }
 
-.agroclima-boton:active{
 
-    background:var(--color-primario);
+/*=========================================================
+  SISTEMA DE DISEÑO PARA MARCADOR DE BÚSQUEDA (Gemini)
+=========================================================*/
 
-    transform:translateY(2px) scale(.96);
-
-    box-shadow:0 1px 4px rgba(6,77,107,.20);
-
-    border-bottom-color:var(--color-acento);
-
+/* Elemento gráfico auxiliar para lectura de estilos desde JS */
+/* Se incluyeron definiciones en el root para unificar el código */
+.agroclima-marcador-estilo {
+    color: var(--marcador-busqueda-color);
+    font-size: var(--marcador-busqueda-tamano);
 }
 
 /*=========================================================
-  AYUDAS VISUALES
+  SISTEMA DE NOTIFICACIONES AGROCLIMA
 =========================================================*/
+
+.agroclima-notificacion {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translate(-50%, -15px);
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    width: max-content;
+    max-width: var(--notificacion-max-width);
+
+    padding:
+        var(--notificacion-padding-y)
+        var(--notificacion-padding-x);
+
+    background: var(--notificacion-bg);
+    color: var(--notificacion-color);
+
+    border: 1px solid var(--notificacion-borde);
+    border-left: 5px solid var(--notificacion-info);
+
+    border-radius: var(--notificacion-radio);
+
+    box-shadow: var(--notificacion-sombra);
+
+    opacity: 0;
+    pointer-events: none;
+
+    z-index: 100000;
+
+    transition:
+        opacity var(--transicion-normal) ease,
+        transform var(--transicion-normal) ease;
+}
+
+
+/* Estado visible */
+
+.agroclima-notificacion.activo {
+    opacity: 1;
+    transform: translate(-50%, 0);
+    pointer-events: auto;
+}
+
+
+/* Estado de salida */
+
+.agroclima-notificacion.ocultando {
+    opacity: 0;
+    transform: translate(-50%, -15px);
+}
+
+
+/* Mensaje */
+
+.agroclima-notificacion-mensaje {
+    line-height: 1.4;
+}
+
+
+/* Botón de cierre */
+
+.agroclima-notificacion-cerrar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 22px;
+    height: 22px;
+
+    padding: 0;
+
+    border: none;
+    border-radius: 50%;
+
+    background: transparent;
+    color: var(--notificacion-color);
+
+    cursor: pointer;
+
+    transition:
+        background var(--transicion-normal) ease,
+        color var(--transicion-normal) ease;
+}
+
+.agroclima-notificacion-cerrar:hover {
+    background: var(--color-primario);
+    color: var(--color-fondo);
+}
+
+
+/*=========================================================
+  TIPOS DE NOTIFICACIÓN
+=========================================================*/
+
+.agroclima-notificacion-info {
+    border-left-color: var(--notificacion-info);
+}
+
+.agroclima-notificacion-exito {
+    border-left-color: var(--notificacion-exito);
+}
+
+.agroclima-notificacion-advertencia {
+    border-left-color: var(--notificacion-advertencia);
+}
+
+.agroclima-notificacion-error {
+    border-left-color: var(--notificacion-error);
+}
+
+
+/*=========================================================
+  ADAPTACIÓN RESPONSIVA
+=========================================================*/
+
+@media (max-width: 600px) {
+
+    .agroclima-notificacion {
+        top: 12px;
+
+        width: calc(100vw - 24px);
+        max-width: none;
+
+        box-sizing: border-box;
+
+        padding:
+            var(--notificacion-padding-y)
+            12px;
+    }
+
+}
