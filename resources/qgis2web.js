@@ -501,7 +501,7 @@ var Title = new ol.control.Control({
     element: (() => {
         var titleElement = document.createElement('div');
         titleElement.className = 'top-left-title ol-control';
-        titleElement.innerHTML = '<h2 class="project-title">Agroclima Cebar: Riesgo Agroclimático.<br>Actualización: 11Ago2026</h2>';
+        titleElement.innerHTML = '<h2 class="project-title">Agroclima Cebar: Riesgo Agroclimático.<br>Actualización: 09Sep2026</h2>';
         return titleElement;
     })(),
     target: 'top-left-container'
