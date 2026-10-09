@@ -501,7 +501,7 @@ var Title = new ol.control.Control({
     element: (() => {
         var titleElement = document.createElement('div');
         titleElement.className = 'top-left-title ol-control';
-        titleElement.innerHTML = '<h2 class="project-title">Agroclima Cebar: Riesgo Agroclimático.<br>Actualización: 09Sep2026</h2>';
+        titleElement.innerHTML = '<h2 class="project-title">Agroclima Cebar: Riesgo Agroclimático. Actualización: 09Oct2026</h2>';
         return titleElement;
     })(),
     target: 'top-left-container'
@@ -1115,22 +1115,11 @@ map.addControl(new ol.control.ScaleLine({}));
 //layerswitcher
 
 var layerSwitcher = new ol.control.LayerSwitcher({
-    activationMode: 'click',
-	startActive: true,
-	tipLabel: "Layers",
-    target: 'top-right-container',
-	collapseLabel: '»',
-	collapseTipLabel: 'Close'
-    });
+    tipLabel: "Layers",
+    target: 'top-right-container'
+});
 map.addControl(layerSwitcher);
-if (hasTouchScreen || isSmallScreen) {
-	document.addEventListener('DOMContentLoaded', function() {
-		setTimeout(function() {
-			layerSwitcher.hidePanel();
-		}, 500);
-	});	
-}
-
+    
 
 
 

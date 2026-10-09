@@ -9,7 +9,7 @@ var style_Municipio_9 = function(feature, resolution){
     
     var labelText = ""; 
     var value = feature.get("");
-    var labelFont = "13.0px \'MS Shell Dlg 2\', sans-serif";
+    var labelFont = "13.0px \'Open Sans Condensed ExtraBold\', sans-serif";
     var labelFill = "#323232";
     var bufferColor = "#fafafa";
     var bufferWidth = 3.0;
